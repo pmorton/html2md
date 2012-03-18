@@ -21,6 +21,16 @@ Feature: Markdown
     * I say parse
     * The markdown should be ([ Link ](/some/link.html))
 
+  Scenario: Other ancors should be ignored
+    * HTML <a name="link"> Link </a>
+    * I say parse
+    * The markdown should be ( Link )
+
+  Scenario: Ancors should reset after being used once
+    * HTML <a href="/some/link.html"> Link </a> <a name="link"> Link </a>
+    * I say parse
+    * The markdown should be ([ Link ](/some/link.html)  Link )
+
   Scenario: Other (a) elements should be ignored
     * HTML <a> Text </a>
     * I say parse
