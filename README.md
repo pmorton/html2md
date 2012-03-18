@@ -6,11 +6,13 @@ A basic library that converts HTML to Markdown. It is basic in that it only supp
 Examples
 ========
 
+``` ruby 
 require 'html2md'
 require 'open-uri'
 
 html2md = Html2Md.new(open("Http://www.google.com").read)
 puts html2md.parse
+```
 
 ``` markdown
 GoogleSearch [Images](http://www.google.com/imghp?hl=en&tab=wi) [Videos](http://video.google.com/?hl=en&tab=wv) [Maps](http://maps.google.com/maps?hl=en&tab=wl) [News](http://news.google.com/nwshp?hl=en&tab=wn) [Shopping](http://www.google.com/shopping?hl=en&tab=wf) [Gmail](https://mail.google.com/mail/?tab=wm) [More »](http://www.google.com/intl/en/options/)[iGoogle](/url?sa=p&pref=ig&pval=3&q=http://www.google.com/ig%3Fhl%3Den%26source%3Diglk&usg=AFQjCNFA18XPfgb7dKnXfKz7x7g1GDH1tg) | [Web History](http://www.google.com/history/optout?hl=en) | [Settings](/preferences?hl=en) | [Sign in](https://accounts.google.com/ServiceLogin?hl=en&continue=http://www.google.com/)  
