@@ -25,6 +25,14 @@ GoogleSearch [Images](http://www.google.com/imghp?hl=en&tab=wi) [Videos](http://
  
 ```
 
+Build
+=====
+This gem is built with Travis-ci.org. http://travis-ci.org/#!/pmorton/html2md
+
+Compatibility
+==============
+Currently not compatiable with jruby, mainly because I am too lazy to fix the build issues. Compatiablity for jruby will be added in the near future.
+
 
 Contributing
 ============
