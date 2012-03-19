@@ -13,6 +13,7 @@ class Html2Md
       @allowed_tags = ['tr','td','th','table']
       @current_list = -1
       @list_tree = []
+      @last_cdata_length = 0
 
     end
     
@@ -91,6 +92,38 @@ class Html2Md
       @markdown << "\n\n"
     end
 
+    def start_h1(attributes)
+      @markdown << "\n"
+    end
+
+    def end_h1(attributes)
+      @markdown << "\n"
+      @last_cdata_length.times do
+        @markdown << "="
+      end
+      @markdown << "\n"
+    end
+
+    def start_h2(attributes)
+      @markdown << "\n"
+    end
+
+    def end_h2(attributes)
+      @markdown << "\n"
+      @last_cdata_length.times do
+        @markdown << "-"
+      end
+      @markdown << "\n"
+    end
+
+    def start_h3(attributes)
+      @markdown << "\n### "
+    end
+
+    def end_h3(attributes)
+      @markdown << "\n"
+    end
+
     def start_a(attributes)
       attributes.each do | attrib |
         if attrib[0].downcase.eql? 'href'
@@ -163,6 +196,7 @@ class Html2Md
     end
 
     def characters c
+      @last_cdata_length = c.chomp.length
       if @list_tree[-1]
         @markdown << c.chomp.lstrip.rstrip
       else

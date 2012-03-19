@@ -79,4 +79,19 @@ Feature: Markdown
   Scenario: Character data should not have new lines  
     * HTML This is character data \n
     * I say parse
-    * The markdown should be (This is character data \n\n)     
+    * The markdown should be (This is character data \n\n) 
+
+  Scenario: First level headers 
+    * HTML <h1>This is a H1 Element</h1>
+    * I say parse
+    * The markdown should be (\nThis is a H1 Element\n====================\n) 
+
+  Scenario: Second level headers 
+    * HTML <h2>This is a H2 Element</h2>
+    * I say parse
+    * The markdown should be (\nThis is a H2 Element\n--------------------\n)
+
+  Scenario: Third level headers 
+    * HTML <h3>This is a H3 Element</h3>
+    * I say parse
+    * The markdown should be (\n### This is a H3 Element\n)
