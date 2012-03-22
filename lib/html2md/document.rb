@@ -11,7 +11,6 @@ class Html2Md
       @markdown = ''
       @last_href = nil
       @allowed_tags = ['tr','td','th','table']
-      @current_list = -1
       @list_tree = []
       @last_cdata_length = 0
 
@@ -36,7 +35,6 @@ class Html2Md
     def start_element name, attributes = []
       start_name = "start_#{name}".to_sym
       both_name = "start_and_end_#{name}".to_sym
-
       if self.respond_to?(both_name)
         self.send( both_name, attributes )
       elsif self.respond_to?(start_name)
@@ -50,7 +48,6 @@ class Html2Md
     def end_element name, attributes = []
       end_name = "end_#{name}".to_sym
       both_name = "start_and_end_#{name}".to_sym
-
       if self.respond_to?(both_name)
         self.send( both_name, attributes )
       elsif self.respond_to?(end_name)
@@ -61,7 +58,7 @@ class Html2Md
     end
 
     def start_hr(attributes)
-      @markdown << "\n* * * * *\n"
+      @markdown << "********\n"
     end
 
     def end_hr(attributes)
@@ -89,7 +86,7 @@ class Html2Md
     end
 
     def end_p(attributes)
-      @markdown << "\n\n"
+      @markdown << "\n" unless @list_tree[-1]
     end
 
     def start_h1(attributes)
@@ -157,21 +154,23 @@ class Html2Md
     end
 
     def start_ul(attributes)
+      @markdown << "\n" if @list_tree[-1]
       @list_tree.push( { :type => :ul, :current_element => 0 } )
-      @markdown << "\n"
     end
 
     def end_ul(attributes)
       @list_tree.pop
+      @markdown << "\n" unless @list_tree[-1]
     end
 
     def start_ol(attributes)
+      @markdown << "\n" if @list_tree[-1]
       @list_tree.push( { :type => :ol, :current_element => 0 } )
-      @markdown << "\n"
     end
 
     def end_ol(attributes)
       @list_tree.pop
+      @markdown << "\n" unless @list_tree[-1]
     end
 
     def start_li(attributes)
@@ -192,7 +191,7 @@ class Html2Md
     end
 
     def end_li(attributes)
-      @markdown << "\n"
+      @markdown << "\n" if @markdown[-1] != "\n"
     end
 
     def characters c
@@ -202,6 +201,11 @@ class Html2Md
       else
         @markdown << c.chomp
       end
+    end
+
+    def end_document
+      #@markdown.gsub!(/\n{2,}((\s{2,})?(-|=|))/,"\n")
+      #puts @markdown.inspect
     end
 
     

@@ -4,7 +4,7 @@ Feature: Markdown
   Scenario: Create a H Rule (HR) element
     * HTML <hr/>
     * I say parse
-    * The markdown should be (\n* * * * *\n)
+    * The markdown should be (********\n)
 
   Scenario: Create a hard break (BR) element
     * HTML <br/>
@@ -14,7 +14,7 @@ Feature: Markdown
   Scenario: Paragraph (P) elements should be a single hard return
     * HTML <p>
     * I say parse
-    * The markdown should be (\n\n)
+    * The markdown should be (\n)
 
   Scenario: Link (a href=) elements should should convert
     * HTML <a href="/some/link.html"> Link </a>
@@ -39,17 +39,17 @@ Feature: Markdown
   Scenario: An order list
     * HTML <ol><li>First</li><li>Second</li><ol>
     * I say parse
-    * The markdown should be (\n  1. First\n  2. Second\n\n)
+    * The markdown should be (  1. First\n  2. Second\n\n\n)
 
   Scenario: An un-order list
     * HTML <ul><li>First</li><li>Second</li><ul>
     * I say parse
-    * The markdown should be (\n  - First\n  - Second\n\n) 
+    * The markdown should be (  - First\n  - Second\n\n\n) 
 
   Scenario: Complex List
     * HTML <ul><li>First</li><li> <ol><li>First<ul><li>First</li><li>Second</li></ul></li><li>Second</li> </ol>Second</li><ul>
     * I say parse
-    * The markdown should be (\n  - First\n  - \n    1. First\n      - First\n      - Second\n\n    2. Second\nSecond\n\n)
+    * The markdown should be (  - First\n  - \n    1. First\n      - First\n      - Second\n    2. Second\nSecond\n\n\n)
 
   Scenario: Emphasis (em) element
     * HTML <em>Emphasis</em>
@@ -79,7 +79,7 @@ Feature: Markdown
   Scenario: Character data should not have new lines  
     * HTML This is character data \n
     * I say parse
-    * The markdown should be (This is character data \n\n) 
+    * The markdown should be (This is character data \n) 
 
   Scenario: First level headers 
     * HTML <h1>This is a H1 Element</h1>
@@ -95,3 +95,8 @@ Feature: Markdown
     * HTML <h3>This is a H3 Element</h3>
     * I say parse
     * The markdown should be (\n### This is a H3 Element\n)
+
+  Scenario: Full File Conversion 
+    * File (./features/assets/test.html)
+    * I say parse
+    * The mardown should be equal to (./features/assets/test.md)

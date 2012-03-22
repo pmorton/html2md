@@ -14,6 +14,6 @@ end
 
 desc "Test"
 task :t, [] => [] do |taks,args| 
-  t = Html2Md.new(open("http://loremipsum.net/about.html").read)
+  t = Html2Md.new(File.read('./test.html'))
   puts t.parse
 end
