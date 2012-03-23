@@ -47,7 +47,7 @@ class Html2Md
     end
 
     def end_element name, attributes = []
-       #@markdown << name
+      #@markdown << name
       end_name = "end_#{name}".to_sym
       both_name = "start_and_end_#{name}".to_sym
       if self.respond_to?(both_name)

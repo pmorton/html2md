@@ -77,7 +77,7 @@ Feature: Markdown
     * The markdown should be (This is in a span) 
 
   Scenario: Character data should not have new lines  
-    * HTML This is character data \n\n\n\n  
+    * HTML <p>This is character data \n\n\n\n</p>  
     * I say parse
     * The markdown should be (This is character data \n\n) 
 
