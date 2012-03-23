@@ -33,6 +33,7 @@ class Html2Md
     end
 
     def start_element name, attributes = []
+      #@markdown << name
       start_name = "start_#{name}".to_sym
       both_name = "start_and_end_#{name}".to_sym
       if self.respond_to?(both_name)
@@ -46,6 +47,7 @@ class Html2Md
     end
 
     def end_element name, attributes = []
+      #@markdown << name
       end_name = "end_#{name}".to_sym
       both_name = "start_and_end_#{name}".to_sym
       if self.respond_to?(both_name)
@@ -86,7 +88,7 @@ class Html2Md
     end
 
     def end_p(attributes)
-      @markdown << "\n" unless @list_tree[-1]
+      @markdown << "\n\n" unless @list_tree[-1]
     end
 
     def start_h1(attributes)
@@ -98,7 +100,7 @@ class Html2Md
       @last_cdata_length.times do
         @markdown << "="
       end
-      @markdown << "\n"
+      @markdown << "\n\n"
     end
 
     def start_h2(attributes)
@@ -110,7 +112,7 @@ class Html2Md
       @last_cdata_length.times do
         @markdown << "-"
       end
-      @markdown << "\n"
+      @markdown << "\n\n"
     end
 
     def start_h3(attributes)
@@ -118,7 +120,7 @@ class Html2Md
     end
 
     def end_h3(attributes)
-      @markdown << "\n"
+      @markdown << "\n\n"
     end
 
     def start_a(attributes)
@@ -154,7 +156,7 @@ class Html2Md
     end
 
     def start_ul(attributes)
-      @markdown << "\n" if @list_tree[-1]
+      @markdown << "\n" #if @list_tree[-1]
       @list_tree.push( { :type => :ul, :current_element => 0 } )
     end
 
@@ -164,7 +166,7 @@ class Html2Md
     end
 
     def start_ol(attributes)
-      @markdown << "\n" if @list_tree[-1]
+      @markdown << "\n"# if @list_tree[-1]
       @list_tree.push( { :type => :ol, :current_element => 0 } )
     end
 
@@ -191,21 +193,20 @@ class Html2Md
     end
 
     def end_li(attributes)
-      @markdown << "\n" if @markdown[-1] != "\n"
+      @markdown << "\n" if @markdown[-1] != "\n" and @markdown[-1] != 10
     end
 
     def characters c
       @last_cdata_length = c.chomp.length
       if @list_tree[-1]
-        @markdown << c.chomp.lstrip.rstrip
+        @markdown << c.gsub(/\n(\s*)?/,"").lstrip
       else
-        @markdown << c.chomp
+        @markdown << c.gsub(/\n(\s*)?/,"")
       end
     end
 
     def end_document
-      #@markdown.gsub!(/\n{2,}((\s{2,})?(-|=|))/,"\n")
-      #puts @markdown.inspect
+      @markdown.gsub!(/\n{2,}/,"\n\n")
     end
 
     
