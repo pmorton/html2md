@@ -60,14 +60,20 @@ class Html2Md
     end
 
     def start_hr(attributes)
-      @markdown << "********\n"
+      @markdown << "\n********\n"
     end
 
     def end_hr(attributes)
       
     end
 
-    def start_and_end_em(attributes)
+    def start_em(attributes)
+      @markdown << '_'
+    end
+
+    def end_em(attributes)
+      @markdown.gsub!(/_(\s+\n*)*(?!.*_\s+\n*)/,'_')
+      @markdown.gsub!(/(\s+?\n*\s+?)\z/,'')
       @markdown << '_'
     end
 
@@ -202,7 +208,7 @@ class Html2Md
         if @list_tree[-1]
           @markdown << c.gsub(/\n(\s*)?/,"").gsub(/\s*$/,"").lstrip
         else
-          @markdown << c.gsub(/\n{1,}(?!\z)/," ").gsub(/\s{2,}/," ").gsub(/\n(\s*)?/,"")
+          @markdown << c.gsub(/\n{1,}(?!\z)/," ").gsub(/\s{2,}/," ").gsub(/\n(\s*)?/,"").gsub('_', '\_')
         end
       end
     end
