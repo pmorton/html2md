@@ -1,9 +1,9 @@
 $LOAD_PATH.unshift 'lib'
-require "html2md/version"
+#require "html2md/version"
 
 Gem::Specification.new do |s|
   s.name              = "html2md"
-  s.version           = Html2Md::VERSION
+  s.version           = '0.1.2'
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "A library for converting basic html to markdown"
   s.homepage          = "http://github.com/pmorton/html2md"
