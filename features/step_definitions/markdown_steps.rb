@@ -12,7 +12,8 @@ After do
 end
 
 Given /HTML (.*)/ do |n|
-  @html2md.source = n.gsub("\\n", "\n")
+  @html2md.source = n.gsub('\n', "\n")
+  puts n.gsub '\n',"\n"
 end
 
 Given /File \((.*)\)/ do |n|

@@ -29,12 +29,12 @@ Feature: Markdown
   Scenario: Ancors should reset after being used once
     * HTML <a href="/some/link.html"> Link </a> <a name="link"> Link </a>
     * I say parse
-    * The markdown should be ([ Link ](/some/link.html)  Link )
+    * The markdown should be ([ Link ](/some/link.html) Link )
 
   Scenario: Other (a) elements should be ignored
-    * HTML <a> Text </a>
+    * HTML <a> Text Text </a>
     * I say parse
-    * The markdown should be ( Text ) 
+    * The markdown should be ( Text Text ) 
 
   Scenario: An order list
     * HTML <ol><li>First</li><li>Second</li><ol>
@@ -77,7 +77,7 @@ Feature: Markdown
     * The markdown should be (This is in a span) 
 
   Scenario: Character data should not have new lines  
-    * HTML <p>This is character data \n\n\n\n</p>  
+    * HTML <p>This is character data    \n\n\n\n</p>  
     * I say parse
     * The markdown should be (This is character data \n\n) 
 
@@ -90,6 +90,11 @@ Feature: Markdown
     * HTML <h2>This is a H2 Element</h2>
     * I say parse
     * The markdown should be (\nThis is a H2 Element\n--------------------\n\n)
+
+  Scenario: New lines should be treated as space 
+    * HTML <p>Word 1\nWord 2<\p>
+    * I say parse
+    * The markdown should be (Word 1 Word 2\n\n)
 
   Scenario: Third level headers 
     * HTML <h3>This is a H3 Element</h3>

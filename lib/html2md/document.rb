@@ -198,10 +198,12 @@ class Html2Md
 
     def characters c
       @last_cdata_length = c.chomp.length
-      if @list_tree[-1]
-        @markdown << c.gsub(/\n(\s*)?/,"").lstrip
-      else
-        @markdown << c.gsub(/\n(\s*)?/,"")
+      if c.rstrip.lstrip.chomp != ""
+        if @list_tree[-1]
+          @markdown << c.gsub(/\n(\s*)?/,"").gsub(/\s*$/,"").lstrip
+        else
+          @markdown << c.gsub(/\n{1,}(?!\z)/," ").gsub(/\s{2,}/," ").gsub(/\n(\s*)?/,"")
+        end
       end
     end
 
