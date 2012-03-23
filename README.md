@@ -31,7 +31,7 @@ This gem is built with Travis-ci.org. http://travis-ci.org/#!/pmorton/html2md
 
 Compatibility
 ==============
-Currently not compatiable with jruby, mainly because I am too lazy to fix the build issues. Compatiablity for jruby will be added in the near future.
+1.9 Compat + Jruby Support. Currently working through 1.8 support
 
 
 Contributing
