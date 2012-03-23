@@ -204,7 +204,7 @@ class Html2Md
     end
 
     def end_document
-      #@markdown.gsub!(/\n{2,}((\s{2,})?(-|=|))/,"\n")
+      @markdown.gsub!(/\n{2,}/,"\n\n")
       #puts @markdown.inspect
     end
 

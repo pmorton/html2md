@@ -39,17 +39,17 @@ Feature: Markdown
   Scenario: An order list
     * HTML <ol><li>First</li><li>Second</li><ol>
     * I say parse
-    * The markdown should be (  1. First\n  2. Second\n\n\n)
+    * The markdown should be (  1. First\n  2. Second\n\n)
 
   Scenario: An un-order list
     * HTML <ul><li>First</li><li>Second</li><ul>
     * I say parse
-    * The markdown should be (  - First\n  - Second\n\n\n) 
+    * The markdown should be (  - First\n  - Second\n\n) 
 
   Scenario: Complex List
     * HTML <ul><li>First</li><li> <ol><li>First<ul><li>First</li><li>Second</li></ul></li><li>Second</li> </ol>Second</li><ul>
     * I say parse
-    * The markdown should be (  - First\n  - \n    1. First\n      - First\n      - Second\n    2. Second\nSecond\n\n\n)
+    * The markdown should be (  - First\n  - \n    1. First\n      - First\n      - Second\n    2. Second\nSecond\n\n)
 
   Scenario: Emphasis (em) element
     * HTML <em>Emphasis</em>
