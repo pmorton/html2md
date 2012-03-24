@@ -215,6 +215,9 @@ class Html2Md
 
     def end_document
       @markdown.gsub!(/\n{2,}/,"\n\n")
+      
+      #Replace All Ancor Links
+      @markdown.gsub!(/\[.*\]\(#.*\)/,'')
     end
 
     
