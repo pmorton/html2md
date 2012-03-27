@@ -154,7 +154,7 @@ class Html2Md
 
     def end_a(attributes)
       begin
-        if @last_href and not (['http','https'].include? URI(@last_href.gsub(/\n/,'')).scheme)
+        if @last_href and not (['http','https'].include? URI(URI.escape(@last_href)).scheme)
             begin 
               rp = URI(relative_url)
               rp.path = @last_href
@@ -217,7 +217,7 @@ class Html2Md
 
     def characters c
       #Escape character data with _
-      c.gsub!('_','\_')
+      c.gsub!('_','\_') unless @pre_block
 
       #Collapse all whitespace into spaces
       c.gsub!(/(\s+|\n|\r\n|\t)/, " ")
