@@ -162,6 +162,8 @@ class Html2Md
 
         @markdown << "](#{@last_href})" if @last_href
         @last_href = nil if @last_href
+      rescue 
+        
       end
 
     end
