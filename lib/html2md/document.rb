@@ -144,7 +144,7 @@ class Html2Md
           
           count = 1
           while is_newline?(@markdown[index-count])
-            @markdown.delete_at(@markdown[index-count])    
+            @markdown.delete_at(index-count)    
           end
 
           @markdown[index-1].gsub!(/^\s+/,'')   
