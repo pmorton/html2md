@@ -76,6 +76,7 @@ class Html2Md
       @markdown.gsub!(/_(\s+\n*)*(?!.*_\s+\n*)/,'_')
       @markdown << '_'
       @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
+      @markdown << "\n"
       
     end
 
