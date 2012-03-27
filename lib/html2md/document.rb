@@ -68,12 +68,12 @@ class Html2Md
     end
 
     def start_em(attributes)
-      @markdown << "\n_"
+      @markdown << "_"
     end
 
     def end_em(attributes)
 
-      @markdown.gsub!(/_(\s+)*(?=\s+)/,"_")
+      @markdown.gsub!(/(?<!\\)(_(\s+))/,"_")
       @markdown << '_'
       @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
       
