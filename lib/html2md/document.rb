@@ -72,9 +72,11 @@ class Html2Md
     end
 
     def end_em(attributes)
+
       @markdown.gsub!(/_(\s+\n*)*(?!.*_\s+\n*)/,'_')
-      @markdown.gsub!(/(\s+?\n*\s+?)\z/,'')
       @markdown << '_'
+      @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
+      
     end
 
     def start_and_end_strong(attributes)
@@ -82,7 +84,7 @@ class Html2Md
     end
 
     def start_br(attributes)
-      @markdown << "  \n"
+      @markdown << "\n[[::HARD_BREAK::]]"
     end
 
     def end_br(attributes)
@@ -182,13 +184,16 @@ class Html2Md
     end
 
     def start_li(attributes)
-      
+      @markdown.gsub! /^\s+(-|\d+.)\s+$/,''
+      #Add Whitespace before the list item
       @list_tree.length.times do 
         @markdown << "  "
       end
 
+      #Increment the Current Element to start at one
       @list_tree[-1][:current_element] += 1
 
+     
       case @list_tree[-1][:type]
       when :ol
         @markdown << "#{ @list_tree[-1][:current_element] }. "
@@ -203,21 +208,42 @@ class Html2Md
     end
 
     def characters c
-      @last_cdata_length = c.chomp.length
+      #Escape character data with _
+      c.gsub!('_','\_')
+
+      #Collapse all whitespace into spaces
+      c.gsub!(/(\s+|\n|\r\n|\t)/, " ")
+
+      
       if c.rstrip.lstrip.chomp != ""
         if @list_tree[-1]
-          @markdown << c.gsub(/\n(\s*)?/,"").gsub(/\s*$/,"").lstrip
+
+          #Strip whitespace at the start of the character data
+          c.gsub!(/\A(\r|\n|\s|\t)/,'')
+
+          c.chomp!
+
+          @last_cdata_length = c.chomp.length
+
+          @markdown << c
         else
-          @markdown << c.gsub(/\n{1,}(?!\z)/," ").gsub(/\s{2,}/," ").gsub(/\n(\s*)?/,"").gsub('_', '\_')
+          @last_cdata_length = c.chomp.length
+          @markdown << c
         end
       end
     end
 
     def end_document
       @markdown.gsub!(/\n{2,}/,"\n\n")
-      
+
       #Replace All Ancor Links
       @markdown.gsub!(/\[.*\]\(#.*\)/,'')
+
+      #Remove all extra space at the end of a line
+      @markdown.gsub!(/ +$/,'')
+
+      #Add Hard Breaks
+      @markdown.gsub!(/\[\[::HARD_BREAK::\]\]/,"   \n")
     end
 
     

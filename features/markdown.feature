@@ -9,7 +9,7 @@ Feature: Markdown
   Scenario: Create a hard break (BR) element
     * HTML <br/>
     * I say parse
-    * The markdown should be (  \n)
+    * The markdown should be (\n   \n)
 
   Scenario: Paragraph (P) elements should be a single hard return
     * HTML <p>
@@ -24,17 +24,17 @@ Feature: Markdown
   Scenario: Other ancors should be ignored
     * HTML <a name="link"> Link </a>
     * I say parse
-    * The markdown should be ( Link )
+    * The markdown should be ( Link)
 
   Scenario: Ancors should reset after being used once
     * HTML <a href="/some/link.html"> Link </a> <a name="link"> Link </a>
     * I say parse
-    * The markdown should be ([ Link ](/some/link.html) Link )
+    * The markdown should be ([ Link ](/some/link.html) Link)
 
   Scenario: Other (a) elements should be ignored
     * HTML <a> Text Text </a>
     * I say parse
-    * The markdown should be ( Text Text ) 
+    * The markdown should be ( Text Text) 
 
   Scenario: An order list
     * HTML <ol><li>First</li><li>Second</li><ol>
@@ -47,9 +47,9 @@ Feature: Markdown
     * The markdown should be (\n  - First\n  - Second\n\n) 
 
   Scenario: Complex List
-    * HTML <ul><li>First</li><li> <ol><li>First<ul><li>First</li><li>Second</li></ul></li><li>Second</li> </ol>Second</li><ul>
+    * HTML <ul> <li>First</li> <li> <ol> <li> Some Text <ul> <li>First</li> <li>Second</li> </ul> </li> <li>Second</li> </ol> </li> <li>Second</li> <ul>
     * I say parse
-    * The markdown should be (\n  - First\n  - \n    1. First\n      - First\n      - Second\n    2. Second\nSecond\n\n)
+    * The markdown should be (\n  - First\n    1. Some Text\n      - First\n      - Second\n    2. Second\n  - Second\n\n)
 
   Scenario: Emphasis (em) element
     * HTML <em>Emphasis</em>
@@ -79,7 +79,7 @@ Feature: Markdown
   Scenario: Character data should not have new lines  
     * HTML <p>This is character data    \n\n\n\n</p>  
     * I say parse
-    * The markdown should be (This is character data \n\n) 
+    * The markdown should be (This is character data\n\n) 
 
   Scenario: Character data should not have new lines  
     * HTML <em><p> This is emphasized </p><br/></em>  
@@ -97,9 +97,9 @@ Feature: Markdown
     * The markdown should be (\nThis is a H2 Element\n--------------------\n\n)
 
   Scenario: New lines should be treated as space 
-    * HTML <p>Word 1\nWord 2<\p>
+    * HTML <body>Word 1\nWord 2</body>
     * I say parse
-    * The markdown should be (Word 1 Word 2\n\n)
+    * The markdown should be (Word 1 Word 2)
 
   Scenario: Third level headers 
     * HTML <h3>This is a H3 Element</h3>
