@@ -13,6 +13,7 @@ class Html2Md
       @allowed_tags = ['tr','td','th','table']
       @list_tree = []
       @last_cdata_length = 0
+      @pre_block = false
 
     end
     
@@ -142,10 +143,12 @@ class Html2Md
     end
 
     def start_pre(attributes)
+      @pre_block = true;
       @markdown << "\n```\n"
     end
 
     def end_pre(attributes)
+      @pre_block = false;
       @markdown << "\n```\n"
     end
 
@@ -163,7 +166,7 @@ class Html2Md
         @markdown << "](#{@last_href})" if @last_href
         @last_href = nil if @last_href
       rescue 
-        
+
       end
 
     end
