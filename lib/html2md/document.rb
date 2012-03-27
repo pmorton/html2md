@@ -150,7 +150,8 @@ class Html2Md
     end
 
     def end_a(attributes)
-        if @last_href and not (['http','https'].include? URI(@last_href).scheme)
+      begin
+        if @last_href and not (['http','https'].include? URI(@last_href.gsub(/\n/,'')).scheme)
             begin 
               rp = URI(relative_url)
               rp.path = @last_href
@@ -161,6 +162,7 @@ class Html2Md
 
         @markdown << "](#{@last_href})" if @last_href
         @last_href = nil if @last_href
+      end
 
     end
 
