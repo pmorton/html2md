@@ -115,3 +115,8 @@ Feature: Markdown
     * File (./features/assets/test.html)
     * I say parse
     * The mardown should be equal to (./features/assets/test.md)
+
+  Scenario: Strike Through
+    * HTML <strike><p> This is striken </p><br/></strike>  
+    * I say parse
+    * The markdown should be (~~This is striken~~) 

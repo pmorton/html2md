@@ -7,8 +7,28 @@ class Html2Md
     attr_reader :markdown
     attr_accessor :relative_url
 
+    def is_newline?(line)
+      if line.is_a? String
+        if /^\s+$/ =~ line
+          true
+        elsif  /^\[\[::HARD_BREAK::\]\]$/ =~ line
+          true
+        #elsif line.empty?
+        #  true
+        else
+          false
+        end
+      else
+        false
+      end
+    end
+
+    def new_line
+      @markdown << "\n" unless is_newline?( @markdown[-1] ) and is_newline?( @markdown[-2] )
+    end
+
     def start_document
-      @markdown = ''
+      @markdown = []
       @last_href = nil
       @allowed_tags = ['tr','td','th','table']
       @list_tree = []
@@ -48,7 +68,6 @@ class Html2Md
     end
 
     def end_element name, attributes = []
-      #@markdown << name
       end_name = "end_#{name}".to_sym
       both_name = "start_and_end_#{name}".to_sym
       if self.respond_to?(both_name)
@@ -65,14 +84,39 @@ class Html2Md
     end
 
     def end_strike(attributes)
-      @markdown.gsub!(/(?<!\\)(\~\~(\s+))(?=\w)/,"~~")
+      
+      #Collapse Breaks
+      while is_newline?( @markdown[-1] )
+        @markdown.delete_at(-1)
+      end
+
+      #Collapse Space Before the emphasis
+      @markdown.reverse!
+
+      @markdown.each_index do |index|
+        if @markdown[index].eql? '~~'
+          
+          count = 1
+          while is_newline?(@markdown[index-count])
+            @markdown.delete_at(@markdown[index-count])    
+          end
+
+          @markdown[index-1].gsub!(/^\s+/,'')   
+        end
+      end
+      @markdown.reverse!
+
+      @markdown[-1].gsub!(/\s+$/,'')
+
       @markdown << '~~'
-      @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*\~\~\z/,'~~')
+
 
     end
     def start_hr(attributes)
-      @markdown << "\n\********\n\n"
-      #start_br(attributes)
+      new_line
+      @markdown << "********"
+      new_line
+      new_line
     end
 
     def end_hr(attributes)
@@ -84,10 +128,34 @@ class Html2Md
     end
 
     def end_em(attributes)
-      @markdown.gsub!(/(?<!\\)(_(\s+))(?=\w)/,"_")
-      @markdown << '_'
-      @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
       
+      #Collapse Breaks
+      while is_newline?( @markdown[-1] )
+        @markdown.delete_at(-1)
+      end
+
+
+      #Collapse Space Before the emphasis
+      @markdown.reverse!
+      
+      @markdown.each_index do |index|
+
+        if @markdown[index].eql? '_' and not @markdown[index+1] =~ /\\$/
+          
+          count = 1
+          while is_newline?(@markdown[index-count])
+            @markdown.delete_at(@markdown[index-count])    
+          end
+
+          @markdown[index-1].gsub!(/^\s+/,'')   
+        end
+      end
+      @markdown.reverse!
+      
+      @markdown[-1].gsub!(/\s+$/,'')
+      @markdown << '_'
+
+      ###@markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
     end
 
     def start_and_end_strong(attributes)
@@ -95,7 +163,8 @@ class Html2Md
     end
 
     def start_br(attributes)
-      @markdown << "\n[[::HARD_BREAK::]]"
+      new_line
+      @markdown << "[[::HARD_BREAK::]]"
     end
 
     def end_br(attributes)
@@ -107,39 +176,44 @@ class Html2Md
     end
 
     def end_p(attributes)
-      @markdown << "\n\n" unless @list_tree[-1]
+      new_line unless @list_tree[-1]
+      new_line unless @list_tree[-1]
     end
 
     def start_h1(attributes)
-      @markdown << "\n"
+      new_line
     end
 
     def end_h1(attributes)
-      @markdown << "\n"
+      new_line
       @last_cdata_length.times do
         @markdown << "="
       end
-      @markdown << "\n\n"
+      new_line
+      new_line
     end
 
     def start_h2(attributes)
-      @markdown << "\n"
+      new_line
     end
 
     def end_h2(attributes)
-      @markdown << "\n"
+      new_line
       @last_cdata_length.times do
         @markdown << "-"
       end
-      @markdown << "\n\n"
+      new_line
+      new_line
     end
 
     def start_h3(attributes)
-      @markdown << "\n### "
+      new_line
+      @markdown << "### "
     end
 
     def end_h3(attributes)
-      @markdown << "\n\n"
+      new_line
+      new_line
     end
 
     def start_a(attributes)
@@ -153,12 +227,16 @@ class Html2Md
 
     def start_pre(attributes)
       @pre_block = true;
-      @markdown << "\n```\n"
+      new_line
+      @markdown << "```"
+      new_line
     end
 
     def end_pre(attributes)
       @pre_block = false;
-      @markdown << "\n```\n"
+      new_line
+      @markdown << "```"
+      new_line
     end
 
     def end_a(attributes)
@@ -181,17 +259,17 @@ class Html2Md
     end
 
     def start_ul(attributes)
-      @markdown << "\n" #if @list_tree[-1]
+      new_line
       @list_tree.push( { :type => :ul, :current_element => 0 } )
     end
 
     def end_ul(attributes)
       @list_tree.pop
-      @markdown << "\n" unless @list_tree[-1]
+      new_line unless @list_tree[-1]
     end
 
     def start_ol(attributes)
-      @markdown << "\n"# if @list_tree[-1]
+      new_line
       @list_tree.push( { :type => :ol, :current_element => 0 } )
     end
 
@@ -201,7 +279,13 @@ class Html2Md
     end
 
     def start_li(attributes)
-      @markdown.gsub! /^\s+(-|\d+.)\s+$/,''
+      
+      if /^(-|\d+.)\s+$/ =~ @markdown[-2]
+        @markdown.delete_at(-2)
+        @markdown.delete_at(-3)
+      end
+
+      @markdown[-2].gsub! /^\s+(-|\d+.)\s+$/,''
       #Add Whitespace before the list item
       @list_tree.length.times do 
         @markdown << "  "
@@ -221,7 +305,7 @@ class Html2Md
     end
 
     def end_li(attributes)
-      @markdown << "\n" if @markdown[-1] != "\n" and @markdown[-1] != 10
+      new_line if @markdown[-1] != "\n" and @markdown[-1] != 10
     end
 
     def characters c
@@ -252,6 +336,7 @@ class Html2Md
 
     def end_document
 
+      @markdown = @markdown.join('')
       #Replace All Ancor Links
       @markdown.gsub!(/\[.*\]\(#.*\)/,'')
 
@@ -262,7 +347,7 @@ class Html2Md
       @markdown.gsub!(/\[\[::HARD_BREAK::\]\]/,"   \n")
 
       #Collapse Superfulious Hard Line Breaks
-      @markdown.gsub!(/(   \n+){1,}/,"   \n")
+      #@markdown.gsub!(/(   \n+){1,}/,"   \n")
 
       #Collapse Superfulious Line Breaks
       @markdown.gsub!(/\n{2,}/,"\n\n")
