@@ -74,7 +74,6 @@ class Html2Md
     end
 
     def end_em(attributes)
-      puts /(?<!\\)(_(\s+))(?=\w)/.match(@markdown).inspect
       @markdown.gsub!(/(?<!\\)(_(\s+))(?=\w)/,"_")
       @markdown << '_'
       @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
