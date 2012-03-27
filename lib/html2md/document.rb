@@ -60,6 +60,16 @@ class Html2Md
       end     
     end
 
+    def start_strike(attributes)
+      @markdown << "~~"
+    end
+
+    def end_strike(attributes)
+      @markdown.gsub!(/(?<!\\)(\~\~(\s+))(?=\w)/,"~~")
+      @markdown << '~~'
+      @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*\~\~\z/,'~~')
+
+    end
     def start_hr(attributes)
       @markdown << "\n\********\n\n"
       #start_br(attributes)
