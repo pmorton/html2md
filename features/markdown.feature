@@ -4,7 +4,7 @@ Feature: Markdown
   Scenario: Create a H Rule (HR) element
     * HTML <hr/>
     * I say parse
-    * The markdown should be (\n********\n)
+    * The markdown should be (\n********\n\n)
 
   Scenario: Create a hard break (BR) element
     * HTML <br/>
@@ -84,7 +84,12 @@ Feature: Markdown
   Scenario: Character data should not have new lines  
     * HTML <em><p> This is emphasized </p><br/></em>  
     * I say parse
-    * The markdown should be (_This is emphasized_) 
+    * The markdown should be (_This is emphasized_)
+
+  Scenario: HR Followed by em should not fold  
+    * HTML <em><p> This is emphasized </p><br/></em><hr/>  
+    * I say parse
+    * The markdown should be (_This is emphasized_\n********\n\n)  
 
   Scenario: First level headers 
     * HTML <h1>This is a H1 Element</h1>

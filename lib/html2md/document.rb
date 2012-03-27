@@ -60,7 +60,8 @@ class Html2Md
     end
 
     def start_hr(attributes)
-      @markdown << "\n\********\n"
+      @markdown << "\n\********\n\n"
+      #start_br(attributes)
     end
 
     def end_hr(attributes)
@@ -72,8 +73,8 @@ class Html2Md
     end
 
     def end_em(attributes)
-
-      @markdown.gsub!(/(?<!\\)(_(\s+))/,"_")
+      puts /(?<!\\)(_(\s+))(?=\w)/.match(@markdown).inspect
+      @markdown.gsub!(/(?<!\\)(_(\s+))(?=\w)/,"_")
       @markdown << '_'
       @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
       
