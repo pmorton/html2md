@@ -60,7 +60,7 @@ class Html2Md
     end
 
     def start_hr(attributes)
-      @markdown << "\n********\n"
+      @markdown << "\n\********\n"
     end
 
     def end_hr(attributes)
@@ -68,15 +68,14 @@ class Html2Md
     end
 
     def start_em(attributes)
-      @markdown << '_'
+      @markdown << "\n_"
     end
 
     def end_em(attributes)
 
-      @markdown.gsub!(/_(\s+\n*)*(?!.*_\s+\n*)/,'_')
+      @markdown.gsub!(/_(\s+)*(?=\s+)/,"_")
       @markdown << '_'
       @markdown.gsub!(/((\[\[::HARD_BREAK::\]\])?(\s+)?)*_$/,'_')
-      @markdown << "\n"
       
     end
 
@@ -235,7 +234,6 @@ class Html2Md
     end
 
     def end_document
-      @markdown.gsub!(/\n{2,}/,"\n\n")
 
       #Replace All Ancor Links
       @markdown.gsub!(/\[.*\]\(#.*\)/,'')
@@ -245,6 +243,12 @@ class Html2Md
 
       #Add Hard Breaks
       @markdown.gsub!(/\[\[::HARD_BREAK::\]\]/,"   \n")
+
+      #Collapse Superfulious Hard Line Breaks
+      @markdown.gsub!(/(   \n+){1,}/,"   \n")
+
+      #Collapse Superfulious Line Breaks
+      @markdown.gsub!(/\n{2,}/,"\n\n")
     end
 
     
