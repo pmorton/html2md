@@ -3,7 +3,7 @@ $LOAD_PATH.unshift 'lib'
 
 Gem::Specification.new do |s|
   s.name              = "html2md"
-  s.version           = '0.1.2'
+  s.version           = '0.1.3'
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = "A library for converting basic html to markdown"
   s.homepage          = "http://github.com/pmorton/html2md"
